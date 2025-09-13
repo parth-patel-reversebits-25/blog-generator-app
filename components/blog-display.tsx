@@ -60,18 +60,18 @@ export default function BlogDisplay() {
     if (!blogData?.content) return;
 
     const element = document.createElement("a");
-    const file = new Blob([blogData.content], { type: "text/plain" });
+    const file = new Blob([blogData.content], { type: "text/html" });
     element.href = URL.createObjectURL(file);
     element.download = `${blogData.topic
       .replace(/[^a-z0-9]/gi, "-")
-      .toLowerCase()}.md`;
+      .toLowerCase()}.html`;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
 
     toast({
       title: "Downloaded!",
-      description: "Blog content downloaded as markdown file.",
+      description: "Blog content downloaded as HTML file.",
     });
   };
 
@@ -99,32 +99,142 @@ export default function BlogDisplay() {
     });
   };
 
-  // Convert markdown to HTML for display
-  const formatContent = (content: string) => {
+  // Process content - handle both HTML and markdown fallback
+  const processContent = (content: string) => {
+    // If content looks like HTML (contains HTML tags), enhance it
+    if (
+      content.includes("<h1>") ||
+      content.includes("<h2>") ||
+      content.includes("<p>")
+    ) {
+      return enhanceHTML(content);
+    }
+
+    // Fallback: if content is markdown, convert it to HTML
+    return convertMarkdownToHTML(content);
+  };
+
+  // Enhanced HTML processing with better styling
+  const enhanceHTML = (content: string) => {
+    return content
+      .replace(
+        /<h1([^>]*)>/g,
+        '<h1$1 class="text-4xl font-bold mb-6 mt-8 text-gray-900 border-b border-gray-200 pb-2">'
+      )
+      .replace(
+        /<h2([^>]*)>/g,
+        '<h2$1 class="text-3xl font-semibold mb-4 mt-8 text-gray-800">'
+      )
+      .replace(
+        /<h3([^>]*)>/g,
+        '<h3$1 class="text-2xl font-medium mb-3 mt-6 text-gray-700">'
+      )
+      .replace(
+        /<h4([^>]*)>/g,
+        '<h4$1 class="text-xl font-medium mb-2 mt-4 text-gray-700">'
+      )
+      .replace(
+        /<h5([^>]*)>/g,
+        '<h5$1 class="text-lg font-medium mb-2 mt-3 text-gray-700">'
+      )
+      .replace(
+        /<p([^>]*)>/g,
+        '<p$1 class="mb-4 leading-relaxed text-gray-700 text-base">'
+      )
+      .replace(/<ul([^>]*)>/g, '<ul$1 class="list-disc ml-6 mb-4 space-y-2">')
+      .replace(
+        /<ol([^>]*)>/g,
+        '<ol$1 class="list-decimal ml-6 mb-4 space-y-2">'
+      )
+      .replace(/<li([^>]*)>/g, '<li$1 class="mb-1 text-gray-700">')
+      .replace(/<strong([^>]*)>/g, '<strong$1 class="font-bold text-gray-900">')
+      .replace(/<em([^>]*)>/g, '<em$1 class="italic text-gray-700">')
+      .replace(
+        /<blockquote([^>]*)>/g,
+        '<blockquote$1 class="border-l-4 border-blue-500 pl-6 py-2 my-4 bg-blue-50 italic text-gray-600">'
+      )
+      .replace(
+        /<code([^>]*)>/g,
+        '<code$1 class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">'
+      )
+      .replace(
+        /<pre([^>]*)>/g,
+        '<pre$1 class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4 text-sm">'
+      )
+      .replace(
+        /<a([^>]*)>/g,
+        '<a$1 class="text-blue-600 hover:text-blue-800 underline">'
+      )
+      .replace(
+        /<table([^>]*)>/g,
+        '<table$1 class="w-full border-collapse border border-gray-300 mb-4">'
+      )
+      .replace(
+        /<th([^>]*)>/g,
+        '<th$1 class="border border-gray-300 px-4 py-2 bg-gray-50 font-semibold text-left">'
+      )
+      .replace(
+        /<td([^>]*)>/g,
+        '<td$1 class="border border-gray-300 px-4 py-2">'
+      );
+  };
+
+  // Fallback markdown to HTML converter (improved)
+  const convertMarkdownToHTML = (content: string) => {
     return content
       .replace(
         /^# (.*$)/gm,
-        '<h1 class="text-3xl font-bold mb-4 text-gray-900">$1</h1>'
+        '<h1 class="text-4xl font-bold mb-6 mt-8 text-gray-900 border-b border-gray-200 pb-2">$1</h1>'
       )
       .replace(
         /^## (.*$)/gm,
-        '<h2 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">$1</h2>'
+        '<h2 class="text-3xl font-semibold mb-4 mt-8 text-gray-800">$1</h2>'
       )
       .replace(
         /^### (.*$)/gm,
-        '<h3 class="text-xl font-medium mb-2 mt-4 text-gray-700">$1</h3>'
+        '<h3 class="text-2xl font-medium mb-3 mt-6 text-gray-700">$1</h3>'
       )
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-      .replace(/^- (.*$)/gm, '<li class="mb-1">$1</li>')
       .replace(
-        /(<li.*<\/li>)/,
-        '<ul class="list-disc list-inside mb-4 space-y-1">$1</ul>'
+        /^#### (.*$)/gm,
+        '<h4 class="text-xl font-medium mb-2 mt-4 text-gray-700">$1</h4>'
       )
-      .replace(/^\d+\. (.*$)/gm, '<li class="mb-1">$1</li>')
       .replace(
-        /^([^<\n].*)$/gm,
-        '<p class="mb-4 leading-relaxed text-gray-700">$1</p>'
+        /^##### (.*$)/gm,
+        '<h5 class="text-lg font-medium mb-2 mt-3 text-gray-700">$1</h5>'
+      )
+      .replace(
+        /\\(.?)\\*/g,
+        '<strong class="font-bold text-gray-900">$1</strong>'
+      )
+      .replace(/\(.?)\*/g, '<em class="italic text-gray-700">$1</em>')
+      .replace(
+        /([^]+)`/g,
+        '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">$1</code>'
+      )
+      .replace(
+        /([^`]+)/g,
+        '<pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4 text-sm"><code>$1</code></pre>'
+      )
+      .replace(
+        /^> (.*$)/gm,
+        '<blockquote class="border-l-4 border-blue-500 pl-6 py-2 my-4 bg-blue-50 italic text-gray-600">$1</blockquote>'
+      )
+      .replace(/^\* (.*$)/gm, '<li class="mb-1 text-gray-700">$1</li>')
+      .replace(/^- (.*$)/gm, '<li class="mb-1 text-gray-700">$1</li>')
+      .replace(/^\d+\. (.*$)/gm, '<li class="mb-1 text-gray-700">$1</li>')
+      .replace(/(<li.*<\/li>)+/g, (match: string) => {
+        if (match.includes("1.") || /^\d+\./.test(match)) {
+          return `<ol class="list-decimal ml-6 mb-4 space-y-2">${match}</ol>`;
+        }
+        return `<ul class="list-disc ml-6 mb-4 space-y-2">${match}</ul>`;
+      })
+      .replace(
+        /^([^<\n#*-].+)$/gm,
+        '<p class="mb-4 leading-relaxed text-gray-700 text-base">$1</p>'
+      )
+      .replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" class="text-blue-600 hover:text-blue-800 underline">$1</a>'
       );
   };
 
@@ -179,9 +289,9 @@ export default function BlogDisplay() {
 
         <CardContent className="pt-8">
           <div
-            className="prose prose-lg max-w-none"
+            className="max-w-none"
             dangerouslySetInnerHTML={{
-              __html: formatContent(blogData.content),
+              __html: processContent(blogData.content),
             }}
           />
         </CardContent>

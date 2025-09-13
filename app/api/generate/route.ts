@@ -545,9 +545,28 @@ ${buildEngagementSection(engagement)}
 - Maintain consistency with selected tone throughout
 - Use benefits-forward language to emphasize reader value
 - Aim for 1500-2500 words for comprehensive coverage
-- Use markdown formatting for proper structure
+- **CRITICAL**: Use ONLY semantic HTML formatting with proper structure (headings, paragraphs, lists, code blocks, etc.)
+- **REQUIRED HTML TAGS**: Use <h1>, <h2>, <h3>, <p>, <ul>, <ol>, <li>, <blockquote>, <code>, <pre>, <strong>, <em>
+- **CODE FORMATTING**: Use <code> tags for inline code and <pre><code> blocks for code snippets
+- **NO MARKDOWN**: Do not use any markdown syntax (no #, *, -, etc.). Use only HTML tags.
+- **STRUCTURE**: Start with <h1> for main title, <h2> for major sections, <h3> for subsections
+- **PARAGRAPHS**: Wrap all text content in <p> tags
+- **LISTS**: Use <ul><li> for bullet points and <ol><li> for numbered lists
+- **EMPHASIS**: Use <strong> for bold and <em> for italics
 
-Write a complete, well-researched blog post that incorporates the selected elements from the 6-pillar framework. Make it engaging, informative, and valuable for the target audience.`;
+**EXAMPLE FORMAT:**
+<h1>Blog Title Here</h1>
+<p>Introduction paragraph with <strong>bold text</strong> and <em>italic text</em>.</p>
+<h2>Major Section</h2>
+<p>Section content here...</p>
+<ul>
+<li>First bullet point</li>
+<li>Second bullet point</li>
+</ul>
+<h3>Subsection</h3>
+<p>More detailed content...</p>
+
+Write a complete, well-researched blog post IN PURE HTML FORMAT that incorporates the selected elements from the 6-pillar framework. Make it engaging, informative, and valuable for the target audience. Return ONLY clean HTML content - NO markdown syntax whatsoever.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -555,7 +574,7 @@ Write a complete, well-researched blog post that incorporates the selected eleme
         {
           role: "system",
           content:
-            "You are an expert technical content writer who specializes in creating exceptional engineering blog posts using Robert Roskam's 6-pillar framework. You create comprehensive, research-backed content that combines evidence, practical guidance, analytical depth, speculative insights, contextual understanding, and engagement techniques. Always write in markdown format with proper headings, formatting, and structure.",
+            "You are an expert technical content writer who specializes in creating exceptional engineering blog posts using Robert Roskam's 6-pillar framework. You create comprehensive, research-backed content that combines evidence, practical guidance, analytical depth, speculative insights, contextual understanding, and engagement techniques. Always write in clean, semantic HTML format with proper headings, formatting, and structure. Return only HTML content without any markdown.",
         },
         {
           role: "user",
