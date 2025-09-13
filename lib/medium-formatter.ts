@@ -19,13 +19,15 @@ export function fixMarkdownFormatting(content: string): string {
       .replace(/\n{3,}/g, "\n\n")
       // Fix spacing around headers
       .replace(/^\s*(#{1,6})\s+/gm, "$1 ")
-      // Fix bold formatting - ensure **text** format is preserved
+      // Fix bold formatting
       .replace(/\s*\*\*\s*([^*]+?)\s*\*\*\s*/g, "**$1**")
-      // Fix italic formatting - ensure *text* format is preserved
+      // Fix italic formatting
       .replace(/\s*\*\s*([^*]+?)\s*\*\s*/g, "*$1*")
-      // Fix numbered list formatting - convert inline numbered items to proper list format
-      .replace(/(\d+)\.\*\*([^*]+?)\*\*:/g, "\n$1. **$2:**")
-      // Fix list formatting - ensure proper bullet points
+      // Ensure list items like -**Bold:** are on new lines with space after colon
+      .replace(/\s*-\s*\*\*([^*]+?)\*\*:?/g, "\n- **$1:** ")
+      // Fix numbered list formatting
+      .replace(/(\d+)\.\s*\*\*([^*]+?)\*\*:?/g, "\n$1. **$2:** ")
+      // Fix bullet points spacing
       .replace(/^\s*[-*+]\s+/gm, "- ")
       .replace(/^\s*\d+\.\s+/gm, (match) => match.trim() + " ")
       // Clean up trailing whitespace
