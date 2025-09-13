@@ -439,7 +439,8 @@ export async function POST(request: NextRequest) {
 
     // Construct the comprehensive prompt using Robert Roskam's Engineering Writing Framework
     const prompt = `
-   
+    # If you don't have the context or don't have any knowledge about the topic then search on internet and then give the response instead of 
+     generating the bluff responses.
 
     # Technical Blog Generation Prompt Template
 
