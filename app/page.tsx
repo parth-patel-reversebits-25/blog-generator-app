@@ -2,6 +2,14 @@
 import BlogForm from "@/components/blog-form";
 
 export default function HomePage() {
+  const scrollToTop = () => {
+    window.scrollTo({
+      behavior: "smooth",
+      top: 0,
+      left: 0,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-5">
       <div className="max-w-6xl mx-auto bg-white rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden">
@@ -28,7 +36,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <BlogForm />
+          <BlogForm scrollToTop={scrollToTop} />
         </div>
       </div>
     </div>

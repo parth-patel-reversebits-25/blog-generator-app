@@ -1,4 +1,5 @@
-import BlogDisplay from "@/components/blog-display"
+"use client";
+import BlogDisplay from "@/components/blog-display";
 
 export default function BlogPage() {
   return (
@@ -7,5 +8,5 @@ export default function BlogPage() {
         <BlogDisplay />
       </div>
     </div>
-  )
+  );
 }

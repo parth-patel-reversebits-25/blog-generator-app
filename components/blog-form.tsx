@@ -30,7 +30,7 @@ interface FormData {
   engagement: string[];
 }
 
-export default function BlogForm() {
+export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
   const [formData, setFormData] = useState<FormData>({
     topic: "",
     audience: "",
@@ -76,6 +76,7 @@ export default function BlogForm() {
     // Validate required fields
     if (!formData.topic || !formData.mainProblem) {
       setError("Please fill in all required fields.");
+      scrollToTop();
       return;
     }
 
@@ -150,8 +151,7 @@ export default function BlogForm() {
               placeholder="e.g., 'Microservices vs Monoliths: When to Choose What'"
               value={formData.topic}
               onChange={(e) => handleInputChange("topic", e.target.value)}
-              required
-              className="selection:bg-[#7955FF] selection:text-white w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
+              className="selection:bg-[#F93089] selection:text-white w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
             />
           </div>
 
@@ -201,8 +201,7 @@ export default function BlogForm() {
               placeholder="What specific problem or challenge will this blog help readers solve?"
               value={formData.mainProblem}
               onChange={(e) => handleInputChange("mainProblem", e.target.value)}
-              required
-              className="selection:bg-[#7955FF] selection:text-white  w-full p-3 border-2 border-gray-200 rounded-lg text-base min-h-[100px] resize-y transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
+              className="selection:bg-[#F93089] selection:text-white  w-full p-3 border-2 border-gray-200 rounded-lg text-base min-h-[100px] resize-y transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
             />
           </div>
         </div>
