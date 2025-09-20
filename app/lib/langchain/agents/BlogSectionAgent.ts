@@ -31,7 +31,7 @@ Selected Elements: {elements}
 Generate detailed content for the {sectionType} section based on the selected elements. 
 Focus on creating actionable, specific, and valuable content that addresses the main problem for the target audience.
 
-Return only the content without any wrapper text or explanations.
+IMPORTANT: Return ONLY clean HTML content without any markdown formatting, code blocks, or wrapper text. Do not include \`\`\`html or \`\`\` markers.
 `);
 
     const chain = prompt.pipe(this.llm).pipe(this.outputParser);
