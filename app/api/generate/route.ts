@@ -29,6 +29,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const finalPromptMegedFromTheUser = DeafultPrompt({
+      topic,
+      audience,
+      mainProblem,
+      tone,
+      evidence,
+      practical,
+      analytical,
+      speculative,
+      contextual,
+      engagement,
+    });
+
+    console.log("Text generation from the user:", finalPromptMegedFromTheUser);
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
