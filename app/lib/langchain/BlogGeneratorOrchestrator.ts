@@ -65,7 +65,7 @@ export class BlogGeneratorOrchestrator {
     return cleaned.trim();
   }
 
-  async generateBlog(params: BlogGenerationParams): Promise<string> {
+  async generateBlog(params: BlogGenerationParams, progressCallback?: (step: string, progress: number) => void): Promise<string> {
     const context = {
       topic: params.topic,
       audience: params.audience,
@@ -74,6 +74,9 @@ export class BlogGeneratorOrchestrator {
     };
 
     const toneDescription = getToneDescription(params.tone);
+    
+    progressCallback?.("🔍 Analyzing your requirements and setting up agents...", 10);
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     const finalPrompt = PromptTemplate.fromTemplate(`
 You are an expert technical content writer who specializes in creating exceptional engineering blog posts using Robert Roskam's 6-pillar framework.
@@ -120,16 +123,26 @@ Create a comprehensive blog post that incorporates the following elements based 
 Generate the complete blog post now.
 `);
 
-    // Generate content for each section using specialized agents
-    const [evidenceContent, practicalContent, analyticalContent, speculativeContent, contextualContent, engagementContent] = await Promise.all([
-      this.evidenceAgent.generateEvidenceContent(params.evidence, context),
-      this.practicalAgent.generatePracticalContent(params.practical, context),
-      this.analyticalAgent.generateAnalyticalContent(params.analytical, context),
-      this.speculativeAgent.generateSpeculativeContent(params.speculative, context),
-      this.contextualAgent.generateContextualContent(params.contextual, context),
-      this.engagementAgent.generateEngagementContent(params.engagement, context),
-    ]);
+    // Generate content for each section using specialized agents with progress updates
+    progressCallback?.("📊 Evidence Agent: Gathering research and statistics...", 20);
+    const evidenceContent = await this.evidenceAgent.generateEvidenceContent(params.evidence, context);
+    
+    progressCallback?.("⚙️ Practical Agent: Creating actionable guidance...", 35);
+    const practicalContent = await this.practicalAgent.generatePracticalContent(params.practical, context);
+    
+    progressCallback?.("🧠 Analytical Agent: Developing deep insights...", 50);
+    const analyticalContent = await this.analyticalAgent.generateAnalyticalContent(params.analytical, context);
+    
+    progressCallback?.("🔮 Speculative Agent: Exploring future trends...", 65);
+    const speculativeContent = await this.speculativeAgent.generateSpeculativeContent(params.speculative, context);
+    
+    progressCallback?.("🌍 Contextual Agent: Adding industry perspective...", 75);
+    const contextualContent = await this.contextualAgent.generateContextualContent(params.contextual, context);
+    
+    progressCallback?.("✨ Engagement Agent: Crafting compelling narrative...", 85);
+    const engagementContent = await this.engagementAgent.generateEngagementContent(params.engagement, context);
 
+    progressCallback?.("📝 Master Writer: Assembling your exceptional blog...", 95);
     const chain = finalPrompt.pipe(this.llm).pipe(this.outputParser);
 
     const result = await chain.invoke({
@@ -145,6 +158,8 @@ Generate the complete blog post now.
       engagementContent,
     });
 
+    progressCallback?.("🎉 Finalizing and polishing your content...", 100);
+    
     // Clean up any markdown artifacts
     return this.cleanMarkdownArtifacts(result);
   }
