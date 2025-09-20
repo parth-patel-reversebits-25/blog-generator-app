@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Copy, Download } from "lucide-react";
 import toast from "react-hot-toast";
+import Loading from "@/components/loading";
+import NoBlogFound from "./NoBlogFound";
 
 interface BlogData {
   topic: string;
@@ -25,13 +27,16 @@ interface BlogData {
 
 export default function BlogDisplay() {
   const [blogData, setBlogData] = useState<BlogData | null>(null);
+  const [loader, setLoader] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const storedBlog = localStorage.getItem("generatedBlog");
     if (storedBlog) {
       setBlogData(JSON.parse(storedBlog));
+      setLoader(false);
     } else {
+      setLoader(false);
       // Redirect to home if no blog data
       router.push("/");
     }
@@ -42,17 +47,8 @@ export default function BlogDisplay() {
 
     try {
       await navigator.clipboard.writeText(blogData.content);
-      // toast({
-      //   title: "Copied!",
-      //   description: "Blog content copied to clipboard.",
-      // });
       toast.success("Blog content copied to clipboard.");
     } catch (err) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to copy content to clipboard.",
-      //   variant: "destructive",
-      // });
       toast.error("Failed to copy content to clipboard.");
     }
   };
@@ -73,18 +69,12 @@ export default function BlogDisplay() {
     toast.success("Blog content downloaded as HTML file.");
   };
 
+  if (loader) {
+    return <Loading simpleLoader={false} />;
+  }
+
   if (!blogData) {
-    return (
-      <Card className="w-full">
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <p className="text-gray-600 mb-4">No blog content found.</p>
-          <Button onClick={() => router.push("/")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Generator
-          </Button>
-        </CardContent>
-      </Card>
-    );
+    return <NoBlogFound />;
   }
 
   const formatDate = (dateString: string) => {
@@ -101,9 +91,9 @@ export default function BlogDisplay() {
   const processContent = (content: string) => {
     // If content looks like HTML (contains HTML tags), enhance it
     if (
-      content.includes("<h1>") ||
-      content.includes("<h2>") ||
-      content.includes("<p>")
+      content?.includes("<h1>") ||
+      content?.includes("<h2>") ||
+      content?.includes("<p>")
     ) {
       return enhanceHTML(content);
     }
@@ -115,7 +105,7 @@ export default function BlogDisplay() {
   // Enhanced HTML processing with better styling
   const enhanceHTML = (content: string) => {
     return content
-      .replace(
+      ?.replace(
         /<h1([^>]*)>/g,
         '<h1$1 class="text-4xl font-bold mb-6 mt-8 text-gray-900 border-b border-gray-200 pb-2">'
       )
@@ -180,7 +170,7 @@ export default function BlogDisplay() {
   // Fallback markdown to HTML converter (improved)
   const convertMarkdownToHTML = (content: string) => {
     return content
-      .replace(
+      ?.replace(
         /^# (.*$)/gm,
         '<h1 class="text-4xl font-bold mb-6 mt-8 text-gray-900 border-b border-gray-200 pb-2">$1</h1>'
       )
@@ -270,16 +260,16 @@ export default function BlogDisplay() {
         <CardHeader className="border-b">
           <div className="space-y-4">
             <h1 className="text-3xl font-bold text-gray-900 leading-tight">
-              {blogData.topic}
+              {blogData?.topic}
             </h1>
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">
-                {blogData.tone?.charAt(0).toUpperCase() +
-                  blogData.tone?.slice(1) || "Professional"}
+                {blogData?.tone?.charAt(0).toUpperCase() +
+                  blogData?.tone?.slice(1) || "Professional"}
               </Badge>
               <Badge variant="outline">
-                {blogData.audience
+                {blogData?.audience
                   ?.replace("-", " ")
                   .split(" ")
                   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -288,7 +278,7 @@ export default function BlogDisplay() {
             </div>
 
             <p className="text-sm text-gray-500">
-              Generated on {formatDate(blogData.generatedAt)}
+              Generated on {formatDate(blogData?.generatedAt)}
             </p>
           </div>
         </CardHeader>
@@ -297,7 +287,7 @@ export default function BlogDisplay() {
           <div
             className="max-w-none"
             dangerouslySetInnerHTML={{
-              __html: processContent(blogData.content),
+              __html: processContent(blogData?.content),
             }}
           />
         </CardContent>
