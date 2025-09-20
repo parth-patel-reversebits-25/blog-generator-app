@@ -6,9 +6,10 @@
 - Nano banana google gemini for image generation
 - Streaming the texts in UI to show blog texts is generating
 - can openai can search on the internet and get the data from it.
-- prompt optimizer of gpt
+- prompt optimizer of gpt-5.
 - Can we use Claude for textual based content generation instead of gpt
 - Show web based response to of final prompt in both openai and claude resposnes to tapan bhai
 - User can be able to select the any content from the final output and we will show the textbox to the 
-  user where we ask what kind of modification that they want even user can remove that content if they 
+  user where we ask what kind of modification that they want and even user can remove that content if they 
   want.
+- Make selection of checkbox on div instead of texts for better selection
