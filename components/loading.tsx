@@ -63,10 +63,12 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
       <CardContent className="py-8">
         <div className="text-center mb-8">
           <div className="relative mb-6">
-            <div className="animate-pulse">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-2xl text-white font-bold">
+            <div className="relative">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-2xl text-white font-bold animate-pulse">
                 🤖
               </div>
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
+              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Crafting Your Exceptional Blog
@@ -120,10 +122,19 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
                       {step.title}
                     </h3>
                     {isActive && (
-                      <div className="ml-3 flex space-x-1">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="ml-3 flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                        </div>
+                        <div className="flex space-x-px">
+                          <div className="w-1 h-4 bg-blue-400 animate-pulse" style={{ animationDelay: "0s" }}></div>
+                          <div className="w-1 h-6 bg-blue-500 animate-pulse" style={{ animationDelay: "0.1s" }}></div>
+                          <div className="w-1 h-3 bg-blue-400 animate-pulse" style={{ animationDelay: "0.2s" }}></div>
+                          <div className="w-1 h-5 bg-blue-500 animate-pulse" style={{ animationDelay: "0.3s" }}></div>
+                          <div className="w-1 h-4 bg-blue-400 animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                        </div>
                       </div>
                     )}
                   </div>

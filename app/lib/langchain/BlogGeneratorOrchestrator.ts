@@ -126,21 +126,27 @@ Generate the complete blog post now.
     // Generate content for each section using specialized agents with progress updates
     progressCallback?.("📊 Evidence Agent: Gathering research and statistics...", 20);
     const evidenceContent = await this.evidenceAgent.generateEvidenceContent(params.evidence, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     progressCallback?.("⚙️ Practical Agent: Creating actionable guidance...", 35);
     const practicalContent = await this.practicalAgent.generatePracticalContent(params.practical, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     progressCallback?.("🧠 Analytical Agent: Developing deep insights...", 50);
     const analyticalContent = await this.analyticalAgent.generateAnalyticalContent(params.analytical, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     progressCallback?.("🔮 Speculative Agent: Exploring future trends...", 65);
     const speculativeContent = await this.speculativeAgent.generateSpeculativeContent(params.speculative, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     progressCallback?.("🌍 Contextual Agent: Adding industry perspective...", 75);
     const contextualContent = await this.contextualAgent.generateContextualContent(params.contextual, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     progressCallback?.("✨ Engagement Agent: Crafting compelling narrative...", 85);
     const engagementContent = await this.engagementAgent.generateEngagementContent(params.engagement, context);
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     progressCallback?.("📝 Master Writer: Assembling your exceptional blog...", 95);
     const chain = finalPrompt.pipe(this.llm).pipe(this.outputParser);
@@ -157,8 +163,10 @@ Generate the complete blog post now.
       contextualContent,
       engagementContent,
     });
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     progressCallback?.("🎉 Finalizing and polishing your content...", 100);
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Clean up any markdown artifacts
     return this.cleanMarkdownArtifacts(result);
