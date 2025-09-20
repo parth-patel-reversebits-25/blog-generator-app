@@ -1,7 +1,7 @@
 "use client";
 
-import Toaster from "@/components/ui/Toaster";
+import ToasterComponent from "@/components/ui/toaster";
 
 export function ToasterProvider() {
-  return <Toaster />;
+  return <ToasterComponent />;
 }
