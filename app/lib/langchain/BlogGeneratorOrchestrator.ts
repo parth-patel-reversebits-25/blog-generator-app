@@ -49,6 +49,22 @@ export class BlogGeneratorOrchestrator {
     this.outputParser = new StringOutputParser();
   }
 
+  private cleanMarkdownArtifacts(content: string): string {
+    // Remove markdown code block markers
+    let cleaned = content.replace(/```html\s*/gi, '');
+    cleaned = cleaned.replace(/```\s*$/g, '');
+    cleaned = cleaned.replace(/^\s*```\s*/gm, '');
+    
+    // Remove any remaining markdown artifacts
+    cleaned = cleaned.replace(/^\s*```[a-zA-Z]*\s*/gm, '');
+    
+    // Remove underline tags
+    cleaned = cleaned.replace(/<u>/gi, '');
+    cleaned = cleaned.replace(/<\/u>/gi, '');
+    
+    return cleaned.trim();
+  }
+
   async generateBlog(params: BlogGenerationParams): Promise<string> {
     const context = {
       topic: params.topic,
@@ -91,7 +107,9 @@ Create a comprehensive blog post that incorporates the following elements based 
 
 **OUTPUT REQUIREMENTS:**
 - Write in clean, semantic HTML format with proper headings, formatting, and structure
-- Return only HTML content without any markdown
+- Return ONLY HTML content without any markdown formatting, code blocks, or wrapper text
+- Do not include code block markers anywhere in the response
+- Do not use underline tags or underline formatting
 - Create a compelling title and introduction
 - Organize content logically with clear sections
 - Include practical examples, code snippets, and actionable insights
@@ -114,7 +132,7 @@ Generate the complete blog post now.
 
     const chain = finalPrompt.pipe(this.llm).pipe(this.outputParser);
 
-    return await chain.invoke({
+    const result = await chain.invoke({
       topic: params.topic,
       audience: params.audience,
       mainProblem: params.mainProblem,
@@ -126,5 +144,8 @@ Generate the complete blog post now.
       contextualContent,
       engagementContent,
     });
+
+    // Clean up any markdown artifacts
+    return this.cleanMarkdownArtifacts(result);
   }
 }
