@@ -1,27 +1,33 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import Loading from "@/components/loading"
+import type React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Loading from "@/components/loading";
 
 interface FormData {
-  topic: string
-  audience: string
-  mainProblem: string
-  tone: string
-  evidence: string[]
-  practical: string[]
-  analytical: string[]
-  speculative: string[]
-  contextual: string[]
-  engagement: string[]
+  topic: string;
+  audience: string;
+  mainProblem: string;
+  tone: string;
+  evidence: string[];
+  practical: string[];
+  analytical: string[];
+  speculative: string[];
+  contextual: string[];
+  engagement: string[];
 }
 
 export default function BlogForm() {
@@ -36,37 +42,44 @@ export default function BlogForm() {
     speculative: [],
     contextual: [],
     engagement: [],
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const router = useRouter()
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
-  const handleCheckboxChange = (category: keyof FormData, value: string, checked: boolean) => {
+  const handleCheckboxChange = (
+    category: keyof FormData,
+    value: string,
+    checked: boolean
+  ) => {
     setFormData((prev) => {
-      const currentArray = prev[category] as string[]
+      const currentArray = prev[category] as string[];
       if (checked) {
-        return { ...prev, [category]: [...currentArray, value] }
+        return { ...prev, [category]: [...currentArray, value] };
       } else {
-        return { ...prev, [category]: currentArray.filter((item) => item !== value) }
+        return {
+          ...prev,
+          [category]: currentArray.filter((item) => item !== value),
+        };
       }
-    })
-  }
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     // Validate required fields
-    if (!formData.topic || !formData.audience || !formData.mainProblem) {
-      setError("Please fill in all required fields.")
-      return
+    if (!formData.topic || !formData.mainProblem) {
+      setError("Please fill in all required fields.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/generate", {
@@ -75,13 +88,13 @@ export default function BlogForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to generate blog content")
+        throw new Error("Failed to generate blog content");
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       // Store the generated blog in localStorage
       localStorage.setItem(
@@ -90,20 +103,24 @@ export default function BlogForm() {
           ...formData,
           content: data.content,
           generatedAt: new Date().toISOString(),
-        }),
-      )
+        })
+      );
 
       // Redirect to blog display page
-      router.push("/blog")
+      router.push("/blog");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred while generating content")
+      setError(
+        err instanceof Error
+          ? err.message
+          : "An error occurred while generating content"
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isLoading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -116,12 +133,17 @@ export default function BlogForm() {
 
       {/* Core Topic & Approach */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">📝 Core Topic & Approach</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          📝 Core Topic & Approach{" "}
+        </h3>
 
         <div className="space-y-5">
           <div>
-            <Label htmlFor="topic" className="block mb-2 text-gray-600 font-semibold">
-              Blog Topic/Title
+            <Label
+              htmlFor="topic"
+              className="block mb-2 text-gray-600 font-semibold"
+            >
+              Blog Topic/Title <span className="text-red-500 font-bold">*</span>
             </Label>
             <Input
               id="topic"
@@ -129,32 +151,50 @@ export default function BlogForm() {
               value={formData.topic}
               onChange={(e) => handleInputChange("topic", e.target.value)}
               required
-              className="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
+              className="selection:bg-[#7955FF] selection:text-white w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
             />
           </div>
 
           <div>
-            <Label htmlFor="audience" className="block mb-2 text-gray-600 font-semibold">
+            <Label
+              htmlFor="audience"
+              className="block mb-2 text-gray-600 font-semibold"
+            >
               Target Audience
             </Label>
-            <Select value={formData.audience} onValueChange={(value) => handleInputChange("audience", value)}>
+            <Select
+              value={formData.audience}
+              onValueChange={(value) => handleInputChange("audience", value)}
+            >
               <SelectTrigger className="w-full p-3 border-2 border-gray-200 rounded-lg text-base">
                 <SelectValue placeholder="Select audience..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="junior-developers">Junior Developers</SelectItem>
-                <SelectItem value="senior-engineers">Senior Engineers</SelectItem>
-                <SelectItem value="engineering-managers">Engineering Managers</SelectItem>
+                <SelectItem value="junior-developers">
+                  Junior Developers
+                </SelectItem>
+                <SelectItem value="senior-engineers">
+                  Senior Engineers
+                </SelectItem>
+                <SelectItem value="engineering-managers">
+                  Engineering Managers
+                </SelectItem>
                 <SelectItem value="technical-leads">Technical Leads</SelectItem>
                 <SelectItem value="architects">Solution Architects</SelectItem>
-                <SelectItem value="mixed-technical">Mixed Technical Audience</SelectItem>
+                <SelectItem value="mixed-technical">
+                  Mixed Technical Audience
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <Label htmlFor="mainProblem" className="block mb-2 text-gray-600 font-semibold">
-              Primary Problem/Challenge to Address
+            <Label
+              htmlFor="mainProblem"
+              className="block mb-2 text-gray-600 font-semibold "
+            >
+              Primary Problem/Challenge to Address{" "}
+              <span className="text-red-500 font-bold">*</span>
             </Label>
             <Textarea
               id="mainProblem"
@@ -162,7 +202,7 @@ export default function BlogForm() {
               value={formData.mainProblem}
               onChange={(e) => handleInputChange("mainProblem", e.target.value)}
               required
-              className="w-full p-3 border-2 border-gray-200 rounded-lg text-base min-h-[100px] resize-y transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
+              className="selection:bg-[#7955FF] selection:text-white  w-full p-3 border-2 border-gray-200 rounded-lg text-base min-h-[100px] resize-y transition-all focus:border-[#3498db] focus:shadow-[0_0_0_3px_rgba(52,152,219,0.1)]"
             />
           </div>
         </div>
@@ -170,7 +210,9 @@ export default function BlogForm() {
 
       {/* Evidence & Research */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">🔍 Evidence & Research (Select what to include)</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          🔍 Evidence & Research (Select what to include)
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -187,7 +229,9 @@ export default function BlogForm() {
               <Checkbox
                 id={item.id}
                 checked={formData.evidence.includes(item.id)}
-                onCheckedChange={(checked) => handleCheckboxChange("evidence", item.id, checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleCheckboxChange("evidence", item.id, checked as boolean)
+                }
                 className="mr-3"
               />
               <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -200,7 +244,9 @@ export default function BlogForm() {
 
       {/* Practical Elements */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">⚙️ Practical Elements</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          ⚙️ Practical Elements
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -217,7 +263,9 @@ export default function BlogForm() {
               <Checkbox
                 id={item.id}
                 checked={formData.practical.includes(item.id)}
-                onCheckedChange={(checked) => handleCheckboxChange("practical", item.id, checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleCheckboxChange("practical", item.id, checked as boolean)
+                }
                 className="mr-3"
               />
               <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -230,7 +278,9 @@ export default function BlogForm() {
 
       {/* Analytical Depth */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">🧠 Analytical Depth</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          🧠 Analytical Depth
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -238,7 +288,10 @@ export default function BlogForm() {
             { id: "trade-offs", label: "Trade-off Analysis" },
             { id: "root-causes", label: "Root Cause Analysis" },
             { id: "limitations", label: "Limitations & Constraints" },
-            { id: "counterarguments", label: "Counterarguments & Alternative Views" },
+            {
+              id: "counterarguments",
+              label: "Counterarguments & Alternative Views",
+            },
           ].map((item) => (
             <div
               key={item.id}
@@ -247,7 +300,13 @@ export default function BlogForm() {
               <Checkbox
                 id={item.id}
                 checked={formData.analytical.includes(item.id)}
-                onCheckedChange={(checked) => handleCheckboxChange("analytical", item.id, checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleCheckboxChange(
+                    "analytical",
+                    item.id,
+                    checked as boolean
+                  )
+                }
                 className="mr-3"
               />
               <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -260,7 +319,9 @@ export default function BlogForm() {
 
       {/* Speculative & Future-Focused */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">🔮 Speculative & Future-Focused</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          🔮 Speculative & Future-Focused
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -275,7 +336,13 @@ export default function BlogForm() {
               <Checkbox
                 id={item.id}
                 checked={formData.speculative.includes(item.id)}
-                onCheckedChange={(checked) => handleCheckboxChange("speculative", item.id, checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleCheckboxChange(
+                    "speculative",
+                    item.id,
+                    checked as boolean
+                  )
+                }
                 className="mr-3"
               />
               <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -288,7 +355,9 @@ export default function BlogForm() {
 
       {/* Contextual Understanding */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">🌍 Contextual Understanding</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          🌍 Contextual Understanding
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
@@ -304,7 +373,13 @@ export default function BlogForm() {
               <Checkbox
                 id={item.id}
                 checked={formData.contextual.includes(item.id)}
-                onCheckedChange={(checked) => handleCheckboxChange("contextual", item.id, checked as boolean)}
+                onCheckedChange={(checked) =>
+                  handleCheckboxChange(
+                    "contextual",
+                    item.id,
+                    checked as boolean
+                  )
+                }
                 className="mr-3"
               />
               <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -317,22 +392,38 @@ export default function BlogForm() {
 
       {/* Engagement & Style */}
       <div className="bg-slate-50 p-6 rounded-2xl border-l-4 border-[#3498db]">
-        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">✨ Engagement & Style</h3>
+        <h3 className="text-[#2c3e50] text-xl font-semibold mb-4">
+          ✨ Engagement & Style
+        </h3>
 
         <div className="space-y-5">
           <div>
-            <Label htmlFor="tone" className="block mb-2 text-gray-600 font-semibold">
+            <Label
+              htmlFor="tone"
+              className="block mb-2 text-gray-600 font-semibold"
+            >
               Writing Tone
             </Label>
-            <Select value={formData.tone} onValueChange={(value) => handleInputChange("tone", value)}>
+            <Select
+              value={formData.tone}
+              onValueChange={(value) => handleInputChange("tone", value)}
+            >
               <SelectTrigger className="w-full p-3 border-2 border-gray-200 rounded-lg text-base">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="professional">Professional & Authoritative</SelectItem>
-                <SelectItem value="conversational">Conversational & Approachable</SelectItem>
-                <SelectItem value="provocative">Provocative & Thought-provoking</SelectItem>
-                <SelectItem value="educational">Educational & Explanatory</SelectItem>
+                <SelectItem value="professional">
+                  Professional & Authoritative
+                </SelectItem>
+                <SelectItem value="conversational">
+                  Conversational & Approachable
+                </SelectItem>
+                <SelectItem value="provocative">
+                  Provocative & Thought-provoking
+                </SelectItem>
+                <SelectItem value="educational">
+                  Educational & Explanatory
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -351,7 +442,13 @@ export default function BlogForm() {
                 <Checkbox
                   id={item.id}
                   checked={formData.engagement.includes(item.id)}
-                  onCheckedChange={(checked) => handleCheckboxChange("engagement", item.id, checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(
+                      "engagement",
+                      item.id,
+                      checked as boolean
+                    )
+                  }
                   className="mr-3"
                 />
                 <Label htmlFor={item.id} className="cursor-pointer font-medium">
@@ -370,5 +467,5 @@ export default function BlogForm() {
         🎯 Generate Exceptional Blog Content
       </button>
     </form>
-  )
+  );
 }
