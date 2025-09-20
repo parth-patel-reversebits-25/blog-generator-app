@@ -121,7 +121,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading simpleLoader={true} />;
   }
 
   return (

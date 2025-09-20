@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Download } from "lucide-react";
+import {
+  ArrowLeft,
+  CircleCheck,
+  CircleCheckBig,
+  Copy,
+  Download,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import Loading from "@/components/loading";
 import NoBlogFound from "./NoBlogFound";
@@ -28,6 +34,8 @@ interface BlogData {
 export default function BlogDisplay() {
   const [blogData, setBlogData] = useState<BlogData | null>(null);
   const [loader, setLoader] = useState(true);
+  const [copy, setCopy] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -47,8 +55,10 @@ export default function BlogDisplay() {
 
     try {
       await navigator.clipboard.writeText(blogData.content);
+      setCopy(true);
       toast.success("Blog content copied to clipboard.");
     } catch (err) {
+      setCopy(false);
       toast.error("Failed to copy content to clipboard.");
     }
   };
@@ -230,7 +240,11 @@ export default function BlogDisplay() {
     <div className="space-y-6">
       {/* Header with actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <Button variant="outline" onClick={() => router.push("/")}>
+        <Button
+          variant="outline"
+          className="hover:cursor-pointer"
+          onClick={() => router.push("/")}
+        >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Generate Another Blog
         </Button>
@@ -241,8 +255,12 @@ export default function BlogDisplay() {
             className="hover:cursor-pointer"
             onClick={copyToClipboard}
           >
-            <Copy className="w-4 h-4 mr-2" />
-            Copy Blog
+            {copy ? (
+              <CircleCheckBig className="w-4 h-4 mr-2" />
+            ) : (
+              <Copy className="w-4 h-4 mr-2" />
+            )}
+            {copy ? "Blog Copied" : "Copy Blog"}
           </Button>
           <Button
             variant="outline"

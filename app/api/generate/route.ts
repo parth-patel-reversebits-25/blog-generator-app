@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       contextual,
       engagement,
     } = await request.json();
-    console.log("I am invoked...! part 1");
+
     // Validate required fields
     if (!topic || !mainProblem) {
       return NextResponse.json(
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    console.log("I am invoked...! part 2");
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -56,7 +56,6 @@ export async function POST(request: NextRequest) {
       max_tokens: 4000,
       temperature: 0.7,
     });
-    console.log("I am invoked...! part 3");
 
     const content = completion.choices[0]?.message?.content;
     console.log("Chat GPT content:", content);
