@@ -170,7 +170,6 @@ blog-generator/
 │   └── ui/                      # Reusable UI components
 ├── hooks/
 │   ├── use-mobile.ts            # Mobile detection hook
-│   └── use-toast.ts             # Toast notification hook
 ├── lib/
 │   └── utils.ts                 # Utility functions
 ├── public/                      # Static assets

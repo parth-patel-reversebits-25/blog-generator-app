@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { ToasterProvider } from "@/components/ToasterProvider";
 
 export const metadata: Metadata = {
   title: "Blog Generator App",
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         {children}
         <Analytics />
+        <ToasterProvider />
       </body>
     </html>
   );
