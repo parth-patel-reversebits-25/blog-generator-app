@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import {
 import toast from "react-hot-toast";
 import Loading from "@/components/loading";
 import NoBlogFound from "./NoBlogFound";
+import TextEnhancementPopup from "./text-enhancement-popup";
 
 interface BlogData {
   topic: string;
@@ -35,6 +36,10 @@ export default function BlogDisplay() {
   const [blogData, setBlogData] = useState<BlogData | null>(null);
   const [loader, setLoader] = useState(true);
   const [copy, setCopy] = useState(false);
+  const [selectedText, setSelectedText] = useState("");
+  const [showEnhancementPopup, setShowEnhancementPopup] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -78,6 +83,79 @@ export default function BlogDisplay() {
 
     toast.success("Blog content downloaded as HTML file.");
   };
+
+  const handleTextSelection = () => {
+    // Close existing popup first
+    if (showEnhancementPopup) {
+      handleClosePopup();
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const selectedText = selection.toString().trim();
+    if (selectedText.length < 10) {
+      if (selectedText.length > 0) {
+        toast.error("Please select at least 10 characters to enhance");
+      }
+      return;
+    }
+
+    // Check if selection is within the content area
+    const range = selection.getRangeAt(0);
+    if (!contentRef.current?.contains(range.commonAncestorContainer)) {
+      return;
+    }
+
+    const rect = range.getBoundingClientRect();
+    
+    setSelectedText(selectedText);
+    setPopupPosition({
+      x: Math.max(10, rect.left + window.scrollX),
+      y: rect.bottom + window.scrollY + 5,
+    });
+    setShowEnhancementPopup(true);
+  };
+
+  const handleEnhancement = (enhancedContent: string) => {
+    if (!blogData || !enhancedContent) return;
+
+    const updatedBlogData = { 
+      ...blogData, 
+      content: enhancedContent,
+      generatedAt: new Date().toISOString()
+    };
+    
+    setBlogData(updatedBlogData);
+    localStorage.setItem("generatedBlog", JSON.stringify(updatedBlogData));
+    
+    setSelectedText("");
+    setShowEnhancementPopup(false);
+  };
+
+  const handleClosePopup = () => {
+    setShowEnhancementPopup(false);
+    setSelectedText("");
+    window.getSelection()?.removeAllRanges();
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const popupElement = document.querySelector('.text-enhancement-popup');
+      
+      if (popupElement && !popupElement.contains(target) && 
+          contentRef.current && !contentRef.current.contains(target)) {
+        handleClosePopup();
+      }
+    };
+
+    if (showEnhancementPopup) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showEnhancementPopup]);
 
   if (loader) {
     return <Loading simpleLoader={false} />;
@@ -303,13 +381,29 @@ export default function BlogDisplay() {
 
         <CardContent className="pt-8">
           <div
-            className="max-w-none"
+            ref={contentRef}
+            className="max-w-none select-text cursor-text"
+            onMouseUp={handleTextSelection}
             dangerouslySetInnerHTML={{
               __html: processContent(blogData?.content),
             }}
           />
         </CardContent>
       </Card>
+
+      {showEnhancementPopup && selectedText && blogData && (
+        <TextEnhancementPopup
+          selectedText={selectedText}
+          onEnhance={handleEnhancement}
+          blogData={{
+            topic: blogData.topic,
+            audience: blogData.audience,
+            content: blogData.content,
+          }}
+          position={popupPosition}
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 }
