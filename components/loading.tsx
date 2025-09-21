@@ -10,20 +10,77 @@ interface LoadingProps {
 }
 
 const AGENT_STEPS = [
-  { id: 1, emoji: "🔍", title: "Analyzing Requirements", description: "Setting up specialized AI agents for your content" },
-  { id: 2, emoji: "📊", title: "Evidence Agent", description: "Gathering research, statistics, and real-world examples" },
-  { id: 3, emoji: "⚙️", title: "Practical Agent", description: "Creating step-by-step guides and actionable frameworks" },
-  { id: 4, emoji: "🧠", title: "Analytical Agent", description: "Developing deep technical insights and comparisons" },
-  { id: 5, emoji: "🔮", title: "Speculative Agent", description: "Exploring future trends and innovative possibilities" },
-  { id: 6, emoji: "🌍", title: "Contextual Agent", description: "Adding industry perspective and historical context" },
-  { id: 7, emoji: "✨", title: "Engagement Agent", description: "Crafting compelling narrative and storytelling elements" },
-  { id: 8, emoji: "📝", title: "Master Writer", description: "Assembling all elements into exceptional blog content" },
-  { id: 9, emoji: "🎉", title: "Finalizing", description: "Polishing and optimizing your content for publication" }
+  {
+    id: 1,
+    emoji: "🔍",
+    title: "Analyzing Requirements",
+    description: "Setting up specialized AI agents for your content",
+  },
+  {
+    id: 2,
+    emoji: "📊",
+    title: "Evidence Agent",
+    description: "Gathering research, statistics, and real-world examples",
+  },
+  {
+    id: 3,
+    emoji: "⚙️",
+    title: "Practical Agent",
+    description: "Creating step-by-step guides and actionable frameworks",
+  },
+  {
+    id: 4,
+    emoji: "🧠",
+    title: "Analytical Agent",
+    description: "Developing deep technical insights and comparisons",
+  },
+  {
+    id: 5,
+    emoji: "🔮",
+    title: "Speculative Agent",
+    description: "Exploring future trends and innovative possibilities",
+  },
+  {
+    id: 6,
+    emoji: "🌍",
+    title: "Contextual Agent",
+    description: "Adding industry perspective and historical context",
+  },
+  {
+    id: 7,
+    emoji: "✨",
+    title: "Engagement Agent",
+    description: "Crafting compelling narrative and storytelling elements",
+  },
+  {
+    id: 8,
+    emoji: "📝",
+    title: "Master Writer",
+    description: "Assembling all elements into exceptional blog content",
+  },
+  {
+    id: 9,
+    emoji: "🎉",
+    title: "Finalizing",
+    description: "Polishing and optimizing your content for publication",
+  },
 ];
 
-export default function Loading({ simpleLoader = false, currentStep = "", progress = 0 }: LoadingProps) {
+export default function Loading({
+  simpleLoader = false,
+  currentStep = "",
+  progress = 0,
+}: LoadingProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo({
+      behavior: "smooth",
+      left: 0,
+      top: 0,
+    });
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimatedProgress(progress), 100);
@@ -32,9 +89,10 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
 
   useEffect(() => {
     if (currentStep) {
-      const stepIndex = AGENT_STEPS.findIndex(step => 
-        currentStep.toLowerCase().includes(step.title.toLowerCase()) ||
-        currentStep.includes(step.emoji)
+      const stepIndex = AGENT_STEPS.findIndex(
+        (step) =>
+          currentStep.toLowerCase().includes(step.title.toLowerCase()) ||
+          currentStep.includes(step.emoji)
       );
       if (stepIndex !== -1) {
         setCurrentStepIndex(stepIndex);
@@ -51,7 +109,8 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
             Generating Your Blog Content
           </h3>
           <p className="text-gray-600 text-center max-w-md">
-            Our AI is crafting exceptional content tailored to your specifications. This may take a moment...
+            Our AI is crafting exceptional content tailored to your
+            specifications. This may take a moment...
           </p>
         </CardContent>
       </Card>
@@ -74,20 +133,26 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
               Crafting Your Exceptional Blog
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Our specialized AI agents are working together using Robert Roskam's 6-pillar framework to create compelling, research-backed content.
+              Our specialized AI agents are working together using Robert
+              Roskam's 6-pillar framework to create compelling, research-backed
+              content.
             </p>
           </div>
 
           <div className="mb-8">
             <Progress value={animatedProgress} className="h-3 mb-2" />
-            <p className="text-sm text-gray-500">{Math.round(animatedProgress)}% Complete</p>
+            <p className="text-sm text-gray-500">
+              {Math.round(animatedProgress)}% Complete
+            </p>
           </div>
         </div>
 
         <div className="space-y-4">
           {AGENT_STEPS.map((step, index) => {
             const isActive = index === currentStepIndex;
-            const isCompleted = index < currentStepIndex || (index === currentStepIndex && progress === 100);
+            const isCompleted =
+              index < currentStepIndex ||
+              (index === currentStepIndex && progress === 100);
             const isUpcoming = index > currentStepIndex;
 
             return (
@@ -112,35 +177,68 @@ export default function Loading({ simpleLoader = false, currentStep = "", progre
                     <Circle className="w-6 h-6 text-gray-400" />
                   )}
                 </div>
-                
+
                 <div className="flex-grow">
                   <div className="flex items-center mb-1">
                     <span className="text-2xl mr-3">{step.emoji}</span>
-                    <h3 className={`font-semibold ${
-                      isActive ? "text-blue-900" : isCompleted ? "text-green-900" : "text-gray-700"
-                    }`}>
+                    <h3
+                      className={`font-semibold ${
+                        isActive
+                          ? "text-blue-900"
+                          : isCompleted
+                          ? "text-green-900"
+                          : "text-gray-700"
+                      }`}
+                    >
                       {step.title}
                     </h3>
                     {isActive && (
                       <div className="ml-3 flex items-center space-x-2">
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                          <div
+                            className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+                            style={{ animationDelay: "0.1s" }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+                            style={{ animationDelay: "0.2s" }}
+                          ></div>
                         </div>
                         <div className="flex space-x-px">
-                          <div className="w-1 h-4 bg-blue-400 animate-pulse" style={{ animationDelay: "0s" }}></div>
-                          <div className="w-1 h-6 bg-blue-500 animate-pulse" style={{ animationDelay: "0.1s" }}></div>
-                          <div className="w-1 h-3 bg-blue-400 animate-pulse" style={{ animationDelay: "0.2s" }}></div>
-                          <div className="w-1 h-5 bg-blue-500 animate-pulse" style={{ animationDelay: "0.3s" }}></div>
-                          <div className="w-1 h-4 bg-blue-400 animate-pulse" style={{ animationDelay: "0.4s" }}></div>
+                          <div
+                            className="w-1 h-4 bg-blue-400 animate-pulse"
+                            style={{ animationDelay: "0s" }}
+                          ></div>
+                          <div
+                            className="w-1 h-6 bg-blue-500 animate-pulse"
+                            style={{ animationDelay: "0.1s" }}
+                          ></div>
+                          <div
+                            className="w-1 h-3 bg-blue-400 animate-pulse"
+                            style={{ animationDelay: "0.2s" }}
+                          ></div>
+                          <div
+                            className="w-1 h-5 bg-blue-500 animate-pulse"
+                            style={{ animationDelay: "0.3s" }}
+                          ></div>
+                          <div
+                            className="w-1 h-4 bg-blue-400 animate-pulse"
+                            style={{ animationDelay: "0.4s" }}
+                          ></div>
                         </div>
                       </div>
                     )}
                   </div>
-                  <p className={`text-sm ${
-                    isActive ? "text-blue-700" : isCompleted ? "text-green-700" : "text-gray-500"
-                  }`}>
+                  <p
+                    className={`text-sm ${
+                      isActive
+                        ? "text-blue-700"
+                        : isCompleted
+                        ? "text-green-700"
+                        : "text-gray-500"
+                    }`}
+                  >
                     {step.description}
                   </p>
                 </div>
