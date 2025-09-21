@@ -166,7 +166,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
               value={formData.audience}
               onValueChange={(value) => handleInputChange("audience", value)}
             >
-              <SelectTrigger className="w-full p-3 border-2 border-gray-200 rounded-lg text-base">
+              <SelectTrigger className="cursor-pointer w-full p-3 border-2 border-gray-200 rounded-lg text-base">
                 <SelectValue placeholder="Select audience..." />
               </SelectTrigger>
               <SelectContent>
@@ -221,9 +221,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "expert-quotes", label: "Expert Opinions & Quotes" },
             { id: "case-studies", label: "Industry Case Studies" },
           ].map((item) => (
-            <div
+            <Label
               key={item.id}
-              className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+              className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
               <Checkbox
                 id={item.id}
@@ -233,10 +233,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                 }
                 className="mr-3"
               />
-              <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                {item.label}
-              </Label>
-            </div>
+              {item.label}
+            </Label>
           ))}
         </div>
       </div>
@@ -255,9 +253,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "checklists", label: "Actionable Checklists" },
             { id: "tools", label: "Tools & Resources" },
           ].map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+            <Label
+              htmlFor={item.id}
+              className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
               <Checkbox
                 id={item.id}
@@ -267,10 +265,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                 }
                 className="mr-3"
               />
-              <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                {item.label}
-              </Label>
-            </div>
+              {item.label}
+            </Label>
           ))}
         </div>
       </div>
@@ -292,9 +288,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
               label: "Counterarguments & Alternative Views",
             },
           ].map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+            <Label
+              htmlFor={item.id}
+              className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
               <Checkbox
                 id={item.id}
@@ -308,10 +304,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                 }
                 className="mr-3"
               />
-              <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                {item.label}
-              </Label>
-            </div>
+              {item.label}
+            </Label>
           ))}
         </div>
       </div>
@@ -328,9 +322,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "scenarios", label: "Best/Worst Case Scenarios" },
             { id: "thought-experiments", label: "Thought Experiments" },
           ].map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+            <Label
+              htmlFor={item.id}
+              className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
               <Checkbox
                 id={item.id}
@@ -344,10 +338,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                 }
                 className="mr-3"
               />
-              <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                {item.label}
-              </Label>
-            </div>
+              {item.label}
+            </Label>
           ))}
         </div>
       </div>
@@ -365,9 +357,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "culture", label: "Cultural & Organizational Perspectives" },
             { id: "ethics", label: "Ethical Considerations" },
           ].map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+            <Label
+              htmlFor={item.id}
+              className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
               <Checkbox
                 id={item.id}
@@ -381,10 +373,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                 }
                 className="mr-3"
               />
-              <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                {item.label}
-              </Label>
-            </div>
+              {item.label}
+            </Label>
           ))}
         </div>
       </div>
@@ -407,7 +397,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
               value={formData.tone}
               onValueChange={(value) => handleInputChange("tone", value)}
             >
-              <SelectTrigger className="w-full p-3 border-2 border-gray-200 rounded-lg text-base">
+              <SelectTrigger className="cursor-pointer w-full p-3 border-2 border-gray-200 rounded-lg text-base">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -434,9 +424,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
               { id: "stories", label: "Personal Stories & Anecdotes" },
               { id: "benefits", label: "Benefits-forward Language" },
             ].map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
+              <Label
+                htmlFor={item.id}
+                className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
               >
                 <Checkbox
                   id={item.id}
@@ -450,10 +440,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
                   }
                   className="mr-3"
                 />
-                <Label htmlFor={item.id} className="cursor-pointer font-medium">
-                  {item.label}
-                </Label>
-              </div>
+                {item.label}
+              </Label>
             ))}
           </div>
         </div>

@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   CircleCheck,
   CircleCheckBig,
+  CircleParking,
   Copy,
   Download,
 } from "lucide-react";
@@ -35,11 +36,13 @@ interface BlogData {
 export default function BlogDisplay() {
   const [blogData, setBlogData] = useState<BlogData | null>(null);
   const [loader, setLoader] = useState(true);
+
   const [copy, setCopy] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [showEnhancementPopup, setShowEnhancementPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
+  const [download, SetDownload] = useState(false);
 
   const router = useRouter();
 
@@ -62,6 +65,9 @@ export default function BlogDisplay() {
       await navigator.clipboard.writeText(blogData.content);
       setCopy(true);
       toast.success("Blog content copied to clipboard.");
+      setTimeout(() => {
+        setCopy(false);
+      }, 5000);
     } catch (err) {
       setCopy(false);
       toast.error("Failed to copy content to clipboard.");
@@ -80,7 +86,7 @@ export default function BlogDisplay() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-
+    SetDownload(true);
     toast.success("Blog content downloaded as HTML file.");
   };
 
@@ -109,7 +115,7 @@ export default function BlogDisplay() {
     }
 
     const rect = range.getBoundingClientRect();
-    
+
     setSelectedText(selectedText);
     setPopupPosition({
       x: Math.max(10, rect.left + window.scrollX),
@@ -121,15 +127,15 @@ export default function BlogDisplay() {
   const handleEnhancement = (enhancedContent: string) => {
     if (!blogData || !enhancedContent) return;
 
-    const updatedBlogData = { 
-      ...blogData, 
+    const updatedBlogData = {
+      ...blogData,
       content: enhancedContent,
-      generatedAt: new Date().toISOString()
+      generatedAt: new Date().toISOString(),
     };
-    
+
     setBlogData(updatedBlogData);
     localStorage.setItem("generatedBlog", JSON.stringify(updatedBlogData));
-    
+
     setSelectedText("");
     setShowEnhancementPopup(false);
   };
@@ -143,17 +149,22 @@ export default function BlogDisplay() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      const popupElement = document.querySelector('.text-enhancement-popup');
-      
-      if (popupElement && !popupElement.contains(target) && 
-          contentRef.current && !contentRef.current.contains(target)) {
+      const popupElement = document.querySelector(".text-enhancement-popup");
+
+      if (
+        popupElement &&
+        !popupElement.contains(target) &&
+        contentRef.current &&
+        !contentRef.current.contains(target)
+      ) {
         handleClosePopup();
       }
     };
 
     if (showEnhancementPopup) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showEnhancementPopup]);
 
@@ -345,8 +356,12 @@ export default function BlogDisplay() {
             className="hover:cursor-pointer"
             onClick={downloadContent}
           >
-            <Download className="w-4 h-4 mr-2" />
-            Download
+            {download ? (
+              <CircleCheckBig className="w-4 h-4 mr-2" />
+            ) : (
+              <Download className="w-4 h-4 mr-2" />
+            )}
+            {download ? "Downloaded" : "Download"}
           </Button>
         </div>
       </div>
