@@ -121,16 +121,16 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
           if (line.startsWith("data: ")) {
             try {
               const data = JSON.parse(line.slice(6));
-              
+
               if (data.error) {
                 throw new Error(data.error);
               }
-              
+
               if (data.step && data.progress !== undefined) {
                 setCurrentStep(data.step);
                 setProgress(data.progress);
               }
-              
+
               if (data.content && data.completed) {
                 finalContent = data.content;
               }
@@ -171,7 +171,13 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
   };
 
   if (isLoading) {
-    return <Loading simpleLoader={false} currentStep={currentStep} progress={progress} />;
+    return (
+      <Loading
+        simpleLoader={false}
+        currentStep={currentStep}
+        progress={progress}
+      />
+    );
   }
 
   return (
@@ -304,6 +310,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "tools", label: "Tools & Resources" },
           ].map((item) => (
             <Label
+              key={item.id}
               htmlFor={item.id}
               className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
@@ -339,6 +346,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             },
           ].map((item) => (
             <Label
+              key={item.id}
               htmlFor={item.id}
               className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
@@ -373,6 +381,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "thought-experiments", label: "Thought Experiments" },
           ].map((item) => (
             <Label
+              key={item.id}
               htmlFor={item.id}
               className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
@@ -408,6 +417,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
             { id: "ethics", label: "Ethical Considerations" },
           ].map((item) => (
             <Label
+              key={item.id}
               htmlFor={item.id}
               className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
             >
@@ -475,6 +485,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
               { id: "benefits", label: "Benefits-forward Language" },
             ].map((item) => (
               <Label
+                key={item.id}
                 htmlFor={item.id}
                 className="cursor-pointer flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 hover:border-[#3498db] hover:-translate-y-0.5 transition-all"
               >
