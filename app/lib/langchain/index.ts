@@ -6,3 +6,4 @@ export { SpeculativeAgent } from "./agents/SpeculativeAgent";
 export { ContextualAgent } from "./agents/ContextualAgent";
 export { EngagementAgent } from "./agents/EngagementAgent";
 export { BlogSectionAgent } from "./agents/BlogSectionAgent";
+export { EnhancementAgent } from "./agents/EnhancementAgent";

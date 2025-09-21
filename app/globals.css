@@ -123,3 +123,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Text selection enhancement styles */
+.select-text ::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: inherit;
+}
+
+.select-text::-moz-selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: inherit;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
+.cursor-text:hover {
+  cursor: text;
+}

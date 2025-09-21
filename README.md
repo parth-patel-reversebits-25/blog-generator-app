@@ -11,6 +11,8 @@ A powerful Next.js application that transforms technical expertise into compelli
 - **Modern UI**: Beautiful, responsive interface with gradient designs and smooth animations
 - **Copy & Download**: Easy content export with copy-to-clipboard and download functionality
 - **Real-time Generation**: Powered by OpenAI GPT for high-quality content generation
+- **Text Enhancement**: Select any text in generated blogs for AI-powered improvements
+- **LangChain Integration**: Advanced agent-based text processing for contextual enhancements
 
 ## 🛠️ Tech Stack
 
@@ -146,6 +148,10 @@ Click "🎯 Generate Exceptional Blog Content" to create your blog post using AI
 ### Step 4: Review and Export
 
 - View the generated content on the blog display page
+- **NEW**: Select any text in the generated blog to enhance it with AI
+  - Highlight text (minimum 10 characters)
+  - Enter enhancement request in the popup (e.g., "make it more detailed", "add code examples")
+  - AI will generate improved version using LangChain agent
 - Copy content to clipboard or download as a text file
 - Make any manual edits as needed
 
@@ -155,16 +161,25 @@ Click "🎯 Generate Exceptional Blog Content" to create your blog post using AI
 blog-generator/
 ├── app/
 │   ├── api/
+│   │   ├── enhance/
+│   │   │   └── route.ts          # Text enhancement API
 │   │   └── generate/
 │   │       └── route.ts          # OpenAI API integration
 │   ├── blog/
 │   │   └── page.tsx             # Blog display page
+│   ├── lib/
+│   │   └── langchain/
+│   │       ├── agents/
+│   │       │   ├── EnhancementAgent.ts  # Text enhancement agent
+│   │       │   └── ...              # Other specialized agents
+│   │       └── BlogGeneratorOrchestrator.ts
 │   ├── globals.css              # Global styles
 │   ├── layout.tsx               # Root layout
 │   └── page.tsx                 # Home page
 ├── components/
-│   ├── blog-display.tsx         # Blog content display component
+│   ├── blog-display.tsx         # Blog content display (with text selection)
 │   ├── blog-form.tsx            # Main form component
+│   ├── text-enhancement-popup.tsx  # Text enhancement UI component
 │   ├── loading.tsx              # Loading component
 │   ├── theme-provider.tsx       # Theme provider
 │   └── ui/                      # Reusable UI components
