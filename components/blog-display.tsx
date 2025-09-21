@@ -42,7 +42,7 @@ export default function BlogDisplay() {
   const [showEnhancementPopup, setShowEnhancementPopup] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
-  const [download, SetDownload] = useState(false);
+  const [download, setDownload] = useState(false);
 
   const router = useRouter();
 
@@ -77,17 +77,25 @@ export default function BlogDisplay() {
   const downloadContent = () => {
     if (!blogData?.content) return;
 
-    const element = document.createElement("a");
-    const file = new Blob([blogData.content], { type: "text/html" });
-    element.href = URL.createObjectURL(file);
-    element.download = `${blogData.topic
-      .replace(/[^a-z0-9]/gi, "-")
-      .toLowerCase()}.html`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    SetDownload(true);
-    toast.success("Blog content downloaded as HTML file.");
+    try {
+      const element = document.createElement("a");
+      const file = new Blob([blogData.content], { type: "text/html" });
+      element.href = URL.createObjectURL(file);
+      element.download = `${blogData.topic
+        .replace(/[^a-z0-9]/gi, "-")
+        .toLowerCase()}.html`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      setDownload(true);
+      toast.success("Blog content downloaded as HTML file.");
+      setTimeout(() => {
+        setDownload(false);
+      }, 5000);
+    } catch {
+      setDownload(false);
+      toast.error("Failed to download blog content as HTML file.");
+    }
   };
 
   const handleTextSelection = () => {
