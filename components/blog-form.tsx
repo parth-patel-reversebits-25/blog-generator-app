@@ -45,6 +45,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState("");
+  const [progress, setProgress] = useState(0);
   const router = useRouter();
 
   const handleInputChange = (field: keyof FormData, value: string) => {
@@ -81,6 +83,8 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
     }
 
     setIsLoading(true);
+    setProgress(0);
+    setCurrentStep("🔍 Initializing AI agents...");
 
     try {
       const response = await fetch("/api/generate", {
@@ -95,14 +99,58 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
         throw new Error("Failed to generate blog content");
       }
 
-      const data = await response.json();
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No response stream available");
+      }
+
+      let buffer = "";
+      let finalContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              if (data.error) {
+                throw new Error(data.error);
+              }
+              
+              if (data.step && data.progress !== undefined) {
+                setCurrentStep(data.step);
+                setProgress(data.progress);
+              }
+              
+              if (data.content && data.completed) {
+                finalContent = data.content;
+              }
+            } catch (parseError) {
+              console.error("Error parsing SSE data:", parseError);
+            }
+          }
+        }
+      }
+
+      if (!finalContent) {
+        throw new Error("No content generated");
+      }
 
       // Store the generated blog in localStorage
       localStorage.setItem(
         "generatedBlog",
         JSON.stringify({
           ...formData,
-          content: data.content,
+          content: finalContent,
           generatedAt: new Date().toISOString(),
         })
       );
@@ -117,11 +165,13 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
       );
     } finally {
       setIsLoading(false);
+      setProgress(0);
+      setCurrentStep("");
     }
   };
 
   if (isLoading) {
-    return <Loading simpleLoader={true} />;
+    return <Loading simpleLoader={false} currentStep={currentStep} progress={progress} />;
   }
 
   return (
