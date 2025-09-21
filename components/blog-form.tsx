@@ -168,7 +168,7 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
         setIsLoading(false);
       }, 1000);
       setProgress(0);
-      setCurrentStep("");
+      setCurrentStep("📖 Redirecting to blog page...");
     }
   };
 
