@@ -14,3 +14,7 @@
   want.
 - Make selection of checkbox on div instead of texts for better selection
 - Validator agent that validate if topic is mathcing to coding related things or not
+
+
+Issues:-
+- Show only those things which is selected from checkbox inputs

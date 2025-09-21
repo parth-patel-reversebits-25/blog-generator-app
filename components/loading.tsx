@@ -1,7 +1,9 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, Circle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface LoadingProps {
   simpleLoader?: boolean;
@@ -74,19 +76,15 @@ export default function Loading({
   const [animatedProgress, setAnimatedProgress] = useState(0);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-  useEffect(() => {
-    window.scrollTo({
-      behavior: "smooth",
-      left: 0,
-      top: 0,
-    });
-  }, []);
+  const activeRef = useRef<HTMLDivElement | null>(null);
 
+  // animate progress
   useEffect(() => {
     const timer = setTimeout(() => setAnimatedProgress(progress), 100);
     return () => clearTimeout(timer);
   }, [progress]);
 
+  // detect current step index
   useEffect(() => {
     if (currentStep) {
       const stepIndex = AGENT_STEPS.findIndex(
@@ -99,6 +97,16 @@ export default function Loading({
       }
     }
   }, [currentStep]);
+
+  // scroll active step into view, then scroll to top
+  useEffect(() => {
+    if (activeRef.current) {
+      activeRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentStepIndex]);
 
   if (simpleLoader) {
     return (
@@ -127,15 +135,15 @@ export default function Loading({
                 🤖
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
-              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
+              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-yellow-400 animate-bounce"></div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Crafting Your Exceptional Blog
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Our specialized AI agents are working together using Robert
-              Roskam's 6-pillar framework to create compelling, research-backed
-              content.
+              Roskam&apos;s 6-pillar framework to create compelling,
+              research-backed content.
             </p>
           </div>
 
@@ -153,7 +161,6 @@ export default function Loading({
             const isCompleted =
               index < currentStepIndex ||
               (index === currentStepIndex && progress === 100);
-            const isUpcoming = index > currentStepIndex;
 
             return (
               <div
@@ -193,7 +200,10 @@ export default function Loading({
                       {step.title}
                     </h3>
                     {isActive && (
-                      <div className="ml-3 flex items-center space-x-2">
+                      <div
+                        ref={activeRef}
+                        className="ml-3 flex items-center space-x-2"
+                      >
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
                           <div

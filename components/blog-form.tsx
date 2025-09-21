@@ -164,7 +164,9 @@ export default function BlogForm({ scrollToTop }: { scrollToTop: () => void }) {
           : "An error occurred while generating content"
       );
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
       setProgress(0);
       setCurrentStep("");
     }
